@@ -1,6 +1,16 @@
-// import toast from "react-hot-toast";
+import toast from "react-hot-toast";
 
-function extractMessage(data) {
+import axios from "axios";
+
+type apiErrorData = {
+  message?: unknown;
+  detail?: unknown;
+  success?: unknown;
+  code?: unknown;
+  [key: string]: unknown;
+};
+
+function extractMessage(data: unknown): string | null {
   if (!data) return null;
 
   // Plain string
@@ -8,36 +18,43 @@ function extractMessage(data) {
     return data;
   }
 
-  // Prioritize common message fields
-  if (typeof data.message === "string") {
-    return data.message;
-  }
-
-  if (Array.isArray(data.message) && data.message.length) {
-    return extractMessage(data.message[0]);
-  }
-
-  if (typeof data.detail === "string") {
-    return data.detail;
-  }
-
-  if (Array.isArray(data.detail) && data.detail.length) {
-    return extractMessage(data.detail[0]);
-  }
-
-  // If it's an array
+  // Array
   if (Array.isArray(data)) {
-    return extractMessage(data[0]);
+    if (data.length) {
+      return extractMessage(data[0]);
+    }
+    return null;
   }
 
-  // Validation errors
-  if (typeof data === "object") {
+  // Prioritize common message fields
+  //Obj
+  if (typeof data === "object" && data !== null) {
+    // Type assertion
+    const obj = data as apiErrorData;
+
+    if (typeof obj.message === "string") {
+      return obj.message;
+    }
+
+    if (Array.isArray(obj.message) && obj.message.length) {
+      return extractMessage(obj.message[0]);
+    }
+
+    if (typeof obj.detail === "string") {
+      return obj.detail;
+    }
+
+    if (Array.isArray(obj.detail) && obj.detail.length) {
+      return extractMessage(obj.detail[0]);
+    }
+    // Validation errors
+
     const ignoredKeys = ["success", "code"];
 
-    for (const key in data) {
+    for (const key in obj) {
       if (ignoredKeys.includes(key)) continue;
 
-      const value = data[key];
+      const value = obj[key];
 
       if (Array.isArray(value) && value.length) {
         return extractMessage(value[0]);
@@ -57,16 +74,19 @@ function extractMessage(data) {
   return null;
 }
 
-export function handleApiError(error, showToast = true) {
+export function handleApiError(error: unknown, showToast = true): string {
   let message = "Something went wrong";
 
   // No response = network error
-  if (!error?.response) {
-    message = error?.message || "Network error. Please check your connection.";
+  if (!axios.isAxiosError(error)) {
+    message =
+      error instanceof Error
+        ? error.message
+        : "Network error. Please check your connection";
   } else {
-    const { status, data } = error.response;
+    const { status, data } = error.response ?? {};
 
-    if (status >= 500) {
+    if (status && status >= 500) {
       message = "Server error. Please try again later.";
     } else {
       const extracted = extractMessage(data);

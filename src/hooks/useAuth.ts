@@ -1,9 +1,19 @@
-import { useQuery, useMutation } from "@tanstack/react-query";
-import { signup } from "../services/authService";
+import { useMutation } from "@tanstack/react-query";
+import { login, signup } from "../services/authService";
+import { handleApiError } from "../utils/handleApiError";
 
-const useAuth = () => {
-  const signUpMutation = useMutation({
+// Signup mutation
+const SignUpMutation = () => {
+  return useMutation({
     mutationFn: signup,
-    onError,
+    onError: (error) => handleApiError(error),
   });
 };
+// Login Mutation
+const LoginMutation = () => {
+  return useMutation({
+    mutationFn: login,
+    onError: (error) => handleApiError(error),
+  });
+};
+export { LoginMutation, SignUpMutation };

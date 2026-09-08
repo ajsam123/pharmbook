@@ -6,6 +6,8 @@ import { useForm } from "react-hook-form";
 import { SignUpSchema } from "../../schema/auth.schema";
 import type { SignUpData } from "../../types/auth";
 import { signup } from "../../services/authService";
+import { SignUpMutation } from "../../hooks/useAuth";
+import toast from "react-hot-toast";
 
 const SignUpPage = () => {
   const {
@@ -22,9 +24,14 @@ const SignUpPage = () => {
     },
   });
 
+  const { mutate, isPending } = SignUpMutation();
+
   const submitHandler = (data: SignUpData) => {
-    const res = signup(data);
-    return res;
+    mutate(data, {
+      onSuccess: () => {
+        toast.success("Sign Up successful");
+      },
+    });
   };
 
   // const errorHan
@@ -74,7 +81,7 @@ const SignUpPage = () => {
         />
 
         {/* Signup Submit button */}
-        <Button className="" type="submit">
+        <Button className="" type="submit" loading={isPending}>
           SignUp
         </Button>
       </form>

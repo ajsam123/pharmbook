@@ -6,8 +6,8 @@ import { useForm } from "react-hook-form";
 import { LoginSchema } from "../../schema/auth.schema.js";
 import { z } from "zod";
 import type { LoginData } from "../../types/auth.js";
-import { login } from "../../services/authService.js";
-
+import { LoginMutation } from "../../hooks/useAuth.js";
+import toast from "react-hot-toast";
 const LoginPage = () => {
   type LoginFormData = z.infer<typeof LoginSchema>;
   const {
@@ -21,11 +21,14 @@ const LoginPage = () => {
       password: "",
     },
   });
-
+  // Login mutation
+  const { mutate, isPending } = LoginMutation();
   const submitHandler = (data: LoginData) => {
-    const res = login(data);
-    console.log(res);
-    return res;
+    mutate(data, {
+      onSuccess: () => {
+        toast.success("Login Succesful");
+      },
+    });
   };
 
   return (
@@ -55,7 +58,9 @@ const LoginPage = () => {
         />
 
         {/* Submit button */}
-        <Button type="submit">Login</Button>
+        <Button type="submit" loading={isPending}>
+          Login
+        </Button>
       </form>
     </section>
   );
