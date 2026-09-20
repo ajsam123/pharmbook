@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import Homepage from "./pages/Homepage";
 import LoginPage from "./pages/auth/LoginPage";
 import AuthLayout from "./Layout/AuthLayout";
+import AppLayout from "./Layout/AppLayout";
 import { routes } from "./utils/constants/routes";
 import SignUpPage from "./pages/auth/SignUpPage";
 
@@ -19,11 +20,21 @@ const indexRoute = createRoute({
   component: Homepage,
 });
 
-// Layout Routes
+// Layout Routes ////
+
+// Auth Layout
 const AuthLayoutRoute = createRoute({
   getParentRoute: () => rootRoute,
   id: "auth-layout",
   component: AuthLayout,
+});
+
+// App Layout
+
+const AppLayoutRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  id: "app-layout",
+  component: AppLayout,
 });
 
 // Auth Routes
@@ -40,15 +51,15 @@ const signUpPageRoute = createRoute({
 });
 
 const DashboardRoute = createRoute({
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => AppLayoutRoute,
   path: "/dashboard",
   component: Dashboard,
 });
 
 const routeTree = rootRoute.addChildren([
   indexRoute,
-  DashboardRoute,
   AuthLayoutRoute.addChildren([LoginPageRoute, signUpPageRoute]),
+  AppLayoutRoute.addChildren([DashboardRoute]),
 ]);
 
 export const router = createRouter({
