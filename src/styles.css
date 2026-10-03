@@ -113,6 +113,63 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+@layer components {
+  .heading-1 {
+    @apply font-semibold text-2xl;
+  }
+  .heading-2 {
+    @apply font-semibold text-[40px];
+  }
+  .heading-3 {
+    @apply font-semibold text-[32px];
+  }
+  .heading-4 {
+    @apply font-semibold text-[24px];
+  }
+  .heading-5 {
+    @apply font-semibold text-xl;
+  }
+  .heading-6 {
+    @apply font-semibold text-[18px];
+  }
+  .body-large-semibold {
+    @apply font-semibold text-lg;
+  }
+  .body-large-medium {
+    @apply font-medium text-lg;
+  }
+  .body-large-regular {
+    @apply font-normal text-lg;
+  }
+  .body-medium-semibold {
+    @apply font-semibold text-[16px];
+  }
+  .body-medium-medium {
+    @apply font-medium text-[16px];
+  }
+  .body-medium-regular {
+    @apply font-normal text-[16px];
+  }
+  .body-small-semibold {
+    @apply font-semibold text-[14px];
+  }
+  .body-small-medium {
+    @apply font-medium text-[14px];
+  }
+  .body-small-regular {
+    @apply font-normal text-[14px];
+  }
+  .body-xsmall-semibold {
+    @apply font-semibold text-[12px];
+  }
+  .body-xsmall-medium {
+    @apply font-medium text-[12px];
+  }
+  .body-xsmall-regular {
+    @apply font-normal text-[12px];
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

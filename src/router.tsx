@@ -10,6 +10,7 @@ import AuthLayout from "./Layout/AuthLayout";
 import AppLayout from "./Layout/AppLayout";
 import { routes } from "./utils/constants/routes";
 import SignUpPage from "./pages/auth/SignUpPage";
+import Inventory from "./pages/Inventory";
 
 const rootRoute = createRootRoute();
 
@@ -52,14 +53,20 @@ const signUpPageRoute = createRoute({
 
 const DashboardRoute = createRoute({
   getParentRoute: () => AppLayoutRoute,
-  path: "/dashboard",
+  path: routes.DASHBOARD,
   component: Dashboard,
+});
+
+const InventoryRoute = createRoute({
+  getParentRoute: () => AppLayoutRoute,
+  path: routes.INVENTORY,
+  component: Inventory,
 });
 
 const routeTree = rootRoute.addChildren([
   indexRoute,
   AuthLayoutRoute.addChildren([LoginPageRoute, signUpPageRoute]),
-  AppLayoutRoute.addChildren([DashboardRoute]),
+  AppLayoutRoute.addChildren([DashboardRoute, InventoryRoute]),
 ]);
 
 export const router = createRouter({
